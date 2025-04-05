@@ -1,0 +1,31 @@
+---
+import ReactButtonComponent from "./react/ButtonComponent.tsx";
+
+type Props = {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  color?:
+    | "primary"
+    | "inherit"
+    | "secondary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning";
+  variant?: "text" | "outlined" | "contained";
+  fullWidth?: boolean;
+  type?: "button" | "submit" | "reset";
+};
+
+const { onClick, color, variant, fullWidth, type } = Astro.props;
+---
+
+<ReactButtonComponent
+  color={color}
+  variant={variant}
+  fullWidth={fullWidth}
+  type={type}
+  onClick={onClick}
+  client:only="preact"
+>
+  <slot />
+</ReactButtonComponent>

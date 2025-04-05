@@ -9,6 +9,23 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.6.0"
+    "@astrojs/preact": "^4.0.8",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
+    "@mui/x-date-pickers": "^7.28.3",
+    "@tailwindcss/vite": "^4.1.2",
+    "astro": "^5.6.0",
+    "dayjs": "^1.11.13",
+    "formik": "^2.4.6",
+    "preact": "^10.26.4",
+    "react-qr-code": "^2.0.15",
+    "tailwindcss": "^4.1.2",
+    "yup": "^1.6.1"
+  },
+  "overrides": {
+    "react": "npm:@preact/compat@latest",
+    "react-dom": "npm:@preact/compat@latest"
   }
 }
