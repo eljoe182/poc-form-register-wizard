@@ -1,6 +1,21 @@
+import type { JSX } from "preact";
+import { useState } from "preact/hooks";
 import { FormControl, FormGroup, Input, InputLabel } from "@mui/material";
 
-export default function FormCodeConfirmation() {
+interface Props {
+  onChange: (event: JSX.TargetedEvent<HTMLInputElement>) => void;
+}
+
+export default function FormCodeConfirmation({ onChange }: Props) {
+  const [codeConfirmation, setCodeConfirmation] = useState("");
+
+  const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    if (!event.currentTarget) return;
+    const targetValue = event.currentTarget.value;
+    setCodeConfirmation(targetValue);
+    onChange(event);
+  };
+
   return (
     <form class="flex flex-col items-center justify-center p-12">
       <FormGroup>
@@ -10,6 +25,8 @@ export default function FormCodeConfirmation() {
             id="codeConfirmation"
             name="codeConfirmation"
             aria-describedby="codeConfirmation"
+            value={codeConfirmation}
+            onChange={handleOnChange}
             fullWidth
           />
         </FormControl>

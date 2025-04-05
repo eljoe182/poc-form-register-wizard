@@ -13,4 +13,5 @@ export type ValidationData = {
 export type FormRegisterWizardData = {
   terms?: TermsAndConditions;
   validationData?: ValidationData;
+  codeConfirmation?: string;
 }

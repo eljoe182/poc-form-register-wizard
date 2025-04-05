@@ -1,5 +1,5 @@
 import { Fragment, type JSX } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -83,10 +83,17 @@ export default function HorizontalLinearStepper() {
           [targetName]: targetValue,
         },
       }));
+    } else if (activeStep === 2) {
+      setRegisterWizardData((prevState) => ({
+        ...prevState,
+        codeConfirmation: targetValue as string,
+      }));
     }
-
-    console.log({ registerWizardData });
   };
+
+  useEffect(() => {
+    console.log({ registerWizardData });
+  }, [registerWizardData]);
 
   return (
     <Fragment>
@@ -104,7 +111,7 @@ export default function HorizontalLinearStepper() {
           <FormTermsAndConditions onChange={handleOnChange} />
         )}
         {activeStep === 1 && <FormValidationData onChange={handleOnChange} />}
-        {activeStep === 2 && <FormCodeConfirmation />}
+        {activeStep === 2 && <FormCodeConfirmation onChange={handleOnChange} />}
         {activeStep === 3 && <FormAdditionalInformation />}
         {activeStep === 4 && <FormQRPreInscription />}
       </div>
