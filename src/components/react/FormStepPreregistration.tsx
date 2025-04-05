@@ -1,4 +1,4 @@
-import { Fragment } from "preact";
+import { Fragment, type JSX } from "preact";
 import { useState } from "preact/hooks";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -9,6 +9,8 @@ import FormValidationData from "./FormValidationData";
 import FormCodeConfirmation from "./FormCodeConfirmation";
 import FormAdditionalInformation from "./FormAdditionalInformation";
 import FormQRPreInscription from "./FormQRPreInscription";
+import type { FormRegisterWizardData } from "../../interfaces";
+import type { SelectChangeEvent } from "@mui/material";
 
 const steps = [
   "Terms and Conditions",
@@ -20,6 +22,8 @@ const steps = [
 
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = useState(0);
+  const [registerWizardData, setRegisterWizardData] =
+    useState<FormRegisterWizardData>();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -27,6 +31,61 @@ export default function HorizontalLinearStepper() {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const jsxValue = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    return {
+      targetName: event.currentTarget?.name,
+      targetValue:
+        event.currentTarget.type === "checkbox"
+          ? event.currentTarget.checked
+          : event.currentTarget.value,
+    };
+  };
+
+  const muiValue = (event: SelectChangeEvent) => {
+    const target = event.target as HTMLInputElement;
+    return {
+      targetName: target.name,
+      targetValue: target.value,
+    };
+  };
+
+  const handleOnChange = (
+    event: JSX.TargetedEvent<HTMLInputElement> | SelectChangeEvent
+  ) => {
+    let targetName: string;
+    let targetValue: string | boolean;
+
+    if (event instanceof PointerEvent) {
+      const values = muiValue(event as SelectChangeEvent);
+      targetName = values.targetName;
+      targetValue = values.targetValue;
+    } else {
+      const values = jsxValue(event as JSX.TargetedEvent<HTMLInputElement>);
+      targetName = values.targetName;
+      targetValue = values.targetValue;
+    }
+
+    if (activeStep === 0) {
+      setRegisterWizardData((prevState) => ({
+        ...prevState,
+        terms: {
+          ...prevState?.terms,
+          [targetName]: targetValue,
+        },
+      }));
+    } else if (activeStep === 1) {
+      setRegisterWizardData((prevState) => ({
+        ...prevState,
+        validationData: {
+          ...prevState?.validationData,
+          [targetName]: targetValue,
+        },
+      }));
+    }
+
+    console.log({ registerWizardData });
   };
 
   return (
@@ -41,8 +100,10 @@ export default function HorizontalLinearStepper() {
         })}
       </Stepper>
       <div class="p-2">
-        {activeStep === 0 && <FormTermsAndConditions />}
-        {activeStep === 1 && <FormValidationData />}
+        {activeStep === 0 && (
+          <FormTermsAndConditions onChange={handleOnChange} />
+        )}
+        {activeStep === 1 && <FormValidationData onChange={handleOnChange} />}
         {activeStep === 2 && <FormCodeConfirmation />}
         {activeStep === 3 && <FormAdditionalInformation />}
         {activeStep === 4 && <FormQRPreInscription />}

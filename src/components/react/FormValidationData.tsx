@@ -1,3 +1,5 @@
+import { useState } from "preact/hooks";
+import type { JSX } from "preact";
 import {
   FormControl,
   FormGroup,
@@ -7,14 +9,46 @@ import {
   Select,
   type SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "preact/hooks";
+import type { ValidationData } from "../../interfaces";
 
-export default function FormValidationData() {
-  const [gender, setGender] = useState("");
+interface Props {
+  onChange: (event: JSX.TargetedEvent<HTMLInputElement> | SelectChangeEvent) => void;
+}
+
+const INITIAL_STATE: ValidationData = {
+  firstName: undefined,
+  lastName: undefined,
+  email: undefined,
+  gender: "",
+};
+
+export default function FormValidationData({ onChange }: Props) {
+  const [validationData, setValidationData] =
+    useState<ValidationData>(INITIAL_STATE);
 
   const handleGenderChange = (event: SelectChangeEvent) => {
     if (!event.target) return;
-    setGender(event.target.value);
+
+    setValidationData((prevState) => ({
+      ...prevState,
+      gender: event.target?.value,
+    }));
+
+    onChange(event);
+  };
+
+  const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    if (!event.currentTarget) return;
+
+    const targetName = event.currentTarget.name;
+    const targetValue = event.currentTarget.value;
+
+    setValidationData((prevState) => ({
+      ...prevState,
+      [targetName]: targetValue,
+    }));
+
+    onChange(event);
   };
 
   return (
@@ -33,6 +67,8 @@ export default function FormValidationData() {
             id="firstName"
             name="firstName"
             aria-describedby="firstName"
+            value={validationData.firstName}
+            onChange={handleOnChange}
             fullWidth
           />
         </FormControl>
@@ -42,6 +78,8 @@ export default function FormValidationData() {
             id="lastName"
             name="lastName"
             aria-describedby="lastName"
+            value={validationData.lastName}
+            onChange={handleOnChange}
             fullWidth
           />
         </FormControl>
@@ -54,6 +92,8 @@ export default function FormValidationData() {
             name="email"
             type="email"
             aria-describedby="email"
+            value={validationData.email}
+            onChange={handleOnChange}
             fullWidth
           />
         </FormControl>
@@ -64,8 +104,9 @@ export default function FormValidationData() {
           <Select
             labelId="gender"
             label="Gender"
+            name="gender"
             fullWidth
-            value={gender}
+            value={validationData.gender}
             onChange={handleGenderChange}
           >
             <MenuItem value="1">Male</MenuItem>
