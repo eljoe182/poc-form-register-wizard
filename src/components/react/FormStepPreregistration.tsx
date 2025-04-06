@@ -4,17 +4,19 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
-import FormTermsAndConditions from "./FormTermsAndConditions";
-import FormValidationData from "./FormValidationData";
-import FormCodeConfirmation from "./FormCodeConfirmation";
-import FormAdditionalInformation from "./FormAdditionalInformation";
-import FormQRPreInscription from "./FormQRPreInscription";
+import {
+  FormTermsAndConditions,
+  FormGeneralInformationData,
+  FormCodeConfirmation,
+  FormAdditionalInformation,
+  FormQRPreInscription,
+} from "./";
 import {
   TermsAndConditionsFrom,
-  ValidationDataFrom,
+  GeneralInformationFrom,
   CodeConfirmationFrom,
   AdditionalInformationFrom,
-  ValidationDataSubmittedFrom,
+  GeneralInformationSubmittedFrom,
   TermsAndConditionsSubmittedFrom,
   CodeConfirmationSubmittedFrom,
   AdditionalInformationSubmittedFrom,
@@ -33,7 +35,7 @@ export default function HorizontalLinearStepper() {
   const [qrCode, setQrCode] = useState<string>("");
 
   const formTermsAndConditions = TermsAndConditionsFrom();
-  const formValidationData = ValidationDataFrom();
+  const formGeneralInformationData = GeneralInformationFrom();
   const formCodeConfirmation = CodeConfirmationFrom();
   const formAdditionalInformation = AdditionalInformationFrom();
 
@@ -45,7 +47,9 @@ export default function HorizontalLinearStepper() {
       if (!result) return;
       nextStep();
     } else if (activeStep === 1) {
-      const result = await ValidationDataSubmittedFrom(formValidationData);
+      const result = await GeneralInformationSubmittedFrom(
+        formGeneralInformationData
+      );
       if (!result) return;
       nextStep();
     } else if (activeStep === 2) {
@@ -86,7 +90,9 @@ export default function HorizontalLinearStepper() {
         {activeStep === 0 && (
           <FormTermsAndConditions props={formTermsAndConditions} />
         )}
-        {activeStep === 1 && <FormValidationData props={formValidationData} />}
+        {activeStep === 1 && (
+          <FormGeneralInformationData props={formGeneralInformationData} />
+        )}
         {activeStep === 2 && (
           <FormCodeConfirmation props={formCodeConfirmation} />
         )}

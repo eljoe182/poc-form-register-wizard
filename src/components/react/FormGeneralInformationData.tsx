@@ -6,13 +6,13 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { type ValidationDataFromType } from "../../validations";
+import { type GeneralInformationFromType } from "../../validations";
 
 interface Props {
-  props: ValidationDataFromType;
+  props: GeneralInformationFromType;
 }
 
-export default function FormValidationData({ props }: Props) {
+export default function FormGeneralInformationData({ props }: Props) {
   return (
     <form
       class="flex flex-col items-center justify-center p-12 gap-8"

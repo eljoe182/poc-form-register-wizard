@@ -2,10 +2,10 @@ import type {
   AdditionalInformation,
   CodeConfirmation,
   TermsAndConditions,
-  ValidationData,
+  GeneralInformation,
 } from "../interfaces";
 
-export const VALIDATION_DATA_INITIAL_STATE: ValidationData = {
+export const GENERAL_INFORMATION_INITIAL_STATE: GeneralInformation = {
   firstName: "",
   lastName: "",
   email: "",

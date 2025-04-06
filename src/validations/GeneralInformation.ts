@@ -1,8 +1,8 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { VALIDATION_DATA_INITIAL_STATE } from "../constants";
+import { GENERAL_INFORMATION_INITIAL_STATE } from "../constants";
 
-export const ValidationDataValidationSchema = yup.object({
+export const GeneralInformationValidationSchema = yup.object({
   firstName: yup.string().min(3).required("First Name is required"),
   lastName: yup.string().min(3).required("Last Name is required"),
   email: yup
@@ -13,18 +13,20 @@ export const ValidationDataValidationSchema = yup.object({
   gender: yup.string().min(1).required("Gender is required"),
 });
 
-export const ValidationDataFrom = () =>
+export const GeneralInformationFrom = () =>
   useFormik({
-    initialValues: VALIDATION_DATA_INITIAL_STATE,
-    validationSchema: ValidationDataValidationSchema,
+    initialValues: GENERAL_INFORMATION_INITIAL_STATE,
+    validationSchema: GeneralInformationValidationSchema,
     onSubmit: (values) => {
       console.log({ values });
     },
   });
-export type ValidationDataFromType = ReturnType<typeof ValidationDataFrom>;
+export type GeneralInformationFromType = ReturnType<
+  typeof GeneralInformationFrom
+>;
 
-export const ValidationDataSubmittedFrom = async (
-  form: ValidationDataFromType
+export const GeneralInformationSubmittedFrom = async (
+  form: GeneralInformationFromType
 ) => {
   const validationResult = await form.validateForm();
   form.setErrors(validationResult);

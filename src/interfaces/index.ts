@@ -3,7 +3,7 @@ export type TermsAndConditions = {
   acceptCommunications?: boolean;
 };
 
-export type ValidationData = {
+export type GeneralInformation = {
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -23,7 +23,7 @@ export type AdditionalInformation = {
 
 export type FormRegisterWizardData = {
   terms?: TermsAndConditions;
-  validationData?: ValidationData;
+  generalInformation?: GeneralInformation;
   codeConfirmation?: CodeConfirmation;
   additionalInformation?: AdditionalInformation;
   qrCode?: string;
