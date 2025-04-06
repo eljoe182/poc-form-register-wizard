@@ -88,6 +88,14 @@ export default function HorizontalLinearStepper() {
         ...prevState,
         codeConfirmation: targetValue as string,
       }));
+    } else if (activeStep === 3) {
+      setRegisterWizardData((prevState) => ({
+        ...prevState,
+        additionalInformation: {
+          ...prevState?.additionalInformation,
+          [targetName]: targetValue,
+        },
+      }));
     }
   };
 
@@ -112,7 +120,9 @@ export default function HorizontalLinearStepper() {
         )}
         {activeStep === 1 && <FormValidationData onChange={handleOnChange} />}
         {activeStep === 2 && <FormCodeConfirmation onChange={handleOnChange} />}
-        {activeStep === 3 && <FormAdditionalInformation />}
+        {activeStep === 3 && (
+          <FormAdditionalInformation onChange={handleOnChange} />
+        )}
         {activeStep === 4 && <FormQRPreInscription />}
       </div>
       <div class="flex justify-between mt-4">
