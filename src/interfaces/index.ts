@@ -22,4 +22,5 @@ export type FormRegisterWizardData = {
   validationData?: ValidationData;
   codeConfirmation?: string;
   additionalInformation?: AdditionalInformation;
+  qrCode?: string;
 }

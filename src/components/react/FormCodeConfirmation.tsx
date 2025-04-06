@@ -3,17 +3,17 @@ import { useState } from "preact/hooks";
 import { FormControl, FormGroup, Input, InputLabel } from "@mui/material";
 
 interface Props {
-  onChange: (event: JSX.TargetedEvent<HTMLInputElement>) => void;
+  onDataChanged: (data: string) => void;
 }
 
-export default function FormCodeConfirmation({ onChange }: Props) {
+export default function FormCodeConfirmation({ onDataChanged }: Props) {
   const [codeConfirmation, setCodeConfirmation] = useState("");
 
   const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     if (!event.currentTarget) return;
     const targetValue = event.currentTarget.value;
     setCodeConfirmation(targetValue);
-    onChange(event);
+    onDataChanged(codeConfirmation);
   };
 
   return (

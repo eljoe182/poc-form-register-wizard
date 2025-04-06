@@ -1,4 +1,4 @@
-import { h, type JSX } from "preact";
+import { type JSX } from "preact";
 import { FormControl, FormGroup, Input, InputLabel } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,7 +7,7 @@ import type { AdditionalInformation } from "../../interfaces";
 import dayjs, { type Dayjs } from "dayjs";
 
 interface Props {
-  onChange: (event: JSX.TargetedEvent<HTMLInputElement>) => void;
+  onDataChanged: (data: AdditionalInformation) => void;
 }
 
 const INITIAL_STATE: AdditionalInformation = {
@@ -17,7 +17,7 @@ const INITIAL_STATE: AdditionalInformation = {
   address: undefined,
 };
 
-export default function FormAdditionalInformation({ onChange }: Props) {
+export default function FormAdditionalInformation({ onDataChanged }: Props) {
   const [additionalInformation, setAdditionalInformation] =
     useState<AdditionalInformation>(INITIAL_STATE);
 
@@ -32,7 +32,7 @@ export default function FormAdditionalInformation({ onChange }: Props) {
       [targetName]: targetValue,
     }));
 
-    onChange(event);
+    onDataChanged(additionalInformation);
   };
 
   const handleBirthdateChange = (value: Dayjs | null) => {
@@ -41,6 +41,8 @@ export default function FormAdditionalInformation({ onChange }: Props) {
       ...prevState,
       birthdate: value.toISOString(),
     }));
+
+    onDataChanged(additionalInformation);
   };
 
   return (

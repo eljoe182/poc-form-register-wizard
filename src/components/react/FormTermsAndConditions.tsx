@@ -4,7 +4,7 @@ import { useState } from "preact/hooks";
 import type { TermsAndConditions } from "../../interfaces";
 
 interface Props {
-  onChange: (event: JSX.TargetedEvent<HTMLInputElement>) => void;
+  onDataChanged: (data: TermsAndConditions) => void;
 }
 
 const INITIAL_STATE: TermsAndConditions = {
@@ -12,7 +12,7 @@ const INITIAL_STATE: TermsAndConditions = {
   acceptCommunications: true,
 };
 
-export default function FormTermsAndConditions({ onChange }: Props) {
+export default function FormTermsAndConditions({ onDataChanged }: Props) {
   const [terms, setTerms] = useState<TermsAndConditions>(INITIAL_STATE);
 
   const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
@@ -26,7 +26,7 @@ export default function FormTermsAndConditions({ onChange }: Props) {
       [targetName]: targetValue,
     }));
 
-    onChange(event);
+    onDataChanged(terms);
   };
 
   return (
@@ -41,7 +41,7 @@ export default function FormTermsAndConditions({ onChange }: Props) {
               onChange={handleOnChange}
             />
           }
-          label="Acepto los términos y condiciones y el uso de mis datos."
+          label="I agree to the terms and conditions and the use of my data."
         />
         <FormControlLabel
           control={
@@ -52,7 +52,7 @@ export default function FormTermsAndConditions({ onChange }: Props) {
               onChange={handleOnChange}
             />
           }
-          label="Acepto recibir comunicaciones, promociones y publicidad."
+          label="I agree to receive communications, promotions and advertising."
         />
       </FormGroup>
     </form>

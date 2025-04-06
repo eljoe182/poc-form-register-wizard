@@ -12,7 +12,7 @@ import {
 import type { ValidationData } from "../../interfaces";
 
 interface Props {
-  onChange: (event: JSX.TargetedEvent<HTMLInputElement> | SelectChangeEvent) => void;
+  onDataChanged: (data: ValidationData) => void;
 }
 
 const INITIAL_STATE: ValidationData = {
@@ -22,7 +22,7 @@ const INITIAL_STATE: ValidationData = {
   gender: "",
 };
 
-export default function FormValidationData({ onChange }: Props) {
+export default function FormValidationData({ onDataChanged }: Props) {
   const [validationData, setValidationData] =
     useState<ValidationData>(INITIAL_STATE);
 
@@ -34,7 +34,7 @@ export default function FormValidationData({ onChange }: Props) {
       gender: event.target?.value,
     }));
 
-    onChange(event);
+    onDataChanged(validationData);
   };
 
   const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
@@ -48,7 +48,7 @@ export default function FormValidationData({ onChange }: Props) {
       [targetName]: targetValue,
     }));
 
-    onChange(event);
+    onDataChanged(validationData);
   };
 
   return (
