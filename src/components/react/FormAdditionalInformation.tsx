@@ -1,111 +1,85 @@
-import { type JSX } from "preact";
-import { FormControl, FormGroup, Input, InputLabel } from "@mui/material";
+import { TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState } from "preact/hooks";
-import type { AdditionalInformation } from "../../interfaces";
 import dayjs, { type Dayjs } from "dayjs";
+import type { AdditionalInformationFromType } from "../../validations";
+import { useState } from "preact/hooks";
 
 interface Props {
-  onDataChanged: (data: AdditionalInformation) => void;
+  props: AdditionalInformationFromType;
 }
 
-const INITIAL_STATE: AdditionalInformation = {
-  documentId: undefined,
-  birthdate: undefined,
-  phoneNumber: undefined,
-  address: undefined,
-};
+export default function FormAdditionalInformation({ props }: Props) {
+  const [birthdate, setBirthdate] = useState<Dayjs | null>(null);
 
-export default function FormAdditionalInformation({ onDataChanged }: Props) {
-  const [additionalInformation, setAdditionalInformation] =
-    useState<AdditionalInformation>(INITIAL_STATE);
-
-  const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
-    if (!event.currentTarget) return;
-
-    const targetName = event.currentTarget.name;
-    const targetValue = event.currentTarget.value;
-
-    setAdditionalInformation((prevState) => ({
-      ...prevState,
-      [targetName]: targetValue,
-    }));
-
-    onDataChanged(additionalInformation);
-  };
-
-  const handleBirthdateChange = (value: Dayjs | null) => {
-    if (!value) return;
-    setAdditionalInformation((prevState) => ({
-      ...prevState,
-      birthdate: value.toISOString(),
-    }));
-
-    onDataChanged(additionalInformation);
+  const handleOnChangeBirthdate = (date: Dayjs | null) => {
+    if (date) {
+      props.setFieldValue("birthdate", dayjs(date).format("DD-MM-YYYY"));
+      setBirthdate(date);
+    }
   };
 
   return (
-    <form class="flex flex-col items-center justify-center p-12 gap-6">
-      <FormGroup sx={{ width: "100%" }}>
-        <FormControl fullWidth>
-          <InputLabel htmlFor="documentId">Document ID</InputLabel>
-          <Input
-            id="documentId"
-            name="documentId"
-            aria-describedby="documentId"
-            value={additionalInformation.documentId}
-            onChange={handleOnChange}
-            fullWidth
-          />
-        </FormControl>
-      </FormGroup>
-      <FormGroup sx={{ width: "100%" }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            name="birthdate"
-            label="Birthdate"
-            aria-describedby="birthdate"
-            value={
-              additionalInformation.birthdate
-                ? dayjs(additionalInformation.birthdate)
-                : null
-            }
-            onChange={handleBirthdateChange}
-            views={["year", "month", "day"]}
-            maxDate={dayjs().subtract(18, "year")}
-            format="DD-MM-YYYY"
-            disableFuture
-          />
-        </LocalizationProvider>
-      </FormGroup>
-      <FormGroup sx={{ width: "100%" }}>
-        <FormControl fullWidth>
-          <InputLabel htmlFor="phoneNumber">Phone Number</InputLabel>
-          <Input
-            id="phoneNumber"
-            name="phoneNumber"
-            aria-describedby="phoneNumber"
-            value={additionalInformation.phoneNumber}
-            onChange={handleOnChange}
-            fullWidth
-          />
-        </FormControl>
-      </FormGroup>
-      <FormGroup sx={{ width: "100%" }}>
-        <FormControl fullWidth>
-          <InputLabel htmlFor="address">Address</InputLabel>
-          <Input
-            id="address"
-            name="address"
-            type="address"
-            aria-describedby="address"
-            value={additionalInformation.address}
-            onChange={handleOnChange}
-            fullWidth
-          />
-        </FormControl>
-      </FormGroup>
+    <form
+      class="flex flex-col items-center justify-center p-12 gap-6"
+      onSubmit={props.handleSubmit}
+    >
+      <TextField
+        fullWidth
+        label="Document ID"
+        id="documentId"
+        name="documentId"
+        variant="standard"
+        aria-describedby="documentId"
+        value={props.values.documentId}
+        onChange={props.handleChange}
+        onBlur={props.handleBlur}
+        error={Boolean(props.errors.documentId)}
+        helperText={props.errors.documentId}
+        required
+      />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          name="birthdate"
+          label="Birthdate"
+          aria-describedby="birthdate"
+          value={birthdate}
+          onChange={handleOnChangeBirthdate}
+          views={["year", "month", "day"]}
+          maxDate={dayjs().subtract(18, "year")}
+          format="DD-MM-YYYY"
+          disableFuture
+          sx={{ width: "100%" }}
+        />
+      </LocalizationProvider>
+      <TextField
+        fullWidth
+        label="Phone Number"
+        id="phoneNumber"
+        name="phoneNumber"
+        variant="standard"
+        aria-describedby="phoneNumber"
+        value={props.values.phoneNumber}
+        onChange={props.handleChange}
+        onBlur={props.handleBlur}
+        error={Boolean(props.errors.phoneNumber)}
+        helperText={props.errors.phoneNumber}
+        required
+      />
+      <TextField
+        fullWidth
+        label="Address"
+        id="address"
+        name="address"
+        variant="standard"
+        aria-describedby="address"
+        value={props.values.address}
+        onChange={props.handleChange}
+        onBlur={props.handleBlur}
+        error={Boolean(props.errors.address)}
+        helperText={props.errors.address}
+        required
+      />
     </form>
   );
 }

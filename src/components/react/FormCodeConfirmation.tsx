@@ -1,36 +1,29 @@
-import type { JSX } from "preact";
-import { useState } from "preact/hooks";
-import { FormControl, FormGroup, Input, InputLabel } from "@mui/material";
+import { TextField } from "@mui/material";
+import type { CodeConfirmationFromType } from "../../validations";
 
 interface Props {
-  onDataChanged: (data: string) => void;
+  props: CodeConfirmationFromType;
 }
 
-export default function FormCodeConfirmation({ onDataChanged }: Props) {
-  const [codeConfirmation, setCodeConfirmation] = useState("");
-
-  const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
-    if (!event.currentTarget) return;
-    const targetValue = event.currentTarget.value;
-    setCodeConfirmation(targetValue);
-    onDataChanged(codeConfirmation);
-  };
-
+export default function FormCodeConfirmation({ props }: Props) {
   return (
-    <form class="flex flex-col items-center justify-center p-12">
-      <FormGroup>
-        <FormControl>
-          <InputLabel htmlFor="codeConfirmation">Code Confirmation</InputLabel>
-          <Input
-            id="codeConfirmation"
-            name="codeConfirmation"
-            aria-describedby="codeConfirmation"
-            value={codeConfirmation}
-            onChange={handleOnChange}
-            fullWidth
-          />
-        </FormControl>
-      </FormGroup>
+    <form
+      class="flex flex-col items-center justify-center p-12"
+      onSubmit={props.handleSubmit}
+    >
+      <TextField
+        label="Code Confirmation"
+        id="codeConfirmation"
+        name="codeConfirmation"
+        variant="standard"
+        aria-describedby="codeConfirmation"
+        value={props.values.codeConfirmation}
+        onChange={props.handleChange}
+        onBlur={props.handleBlur}
+        error={Boolean(props.errors.codeConfirmation)}
+        helperText={props.errors.codeConfirmation}
+        required
+      />
     </form>
   );
 }

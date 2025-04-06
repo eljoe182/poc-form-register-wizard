@@ -1,5 +1,5 @@
 import { Fragment } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
@@ -9,11 +9,20 @@ import FormValidationData from "./FormValidationData";
 import FormCodeConfirmation from "./FormCodeConfirmation";
 import FormAdditionalInformation from "./FormAdditionalInformation";
 import FormQRPreInscription from "./FormQRPreInscription";
-import type { FormRegisterWizardData } from "../../interfaces";
+import {
+  TermsAndConditionsFrom,
+  ValidationDataFrom,
+  CodeConfirmationFrom,
+  AdditionalInformationFrom,
+  ValidationDataSubmittedFrom,
+  TermsAndConditionsSubmittedFrom,
+  CodeConfirmationSubmittedFrom,
+  AdditionalInformationSubmittedFrom,
+} from "../../validations";
 
 const steps = [
   "Terms and Conditions",
-  "Validation",
+  "General Information",
   "Code Confirmation",
   "Additional Information",
   "QR Pre-inscription",
@@ -21,54 +30,43 @@ const steps = [
 
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = useState(0);
-  const [registerWizardData, setRegisterWizardData] =
-    useState<FormRegisterWizardData>();
+  const [qrCode, setQrCode] = useState<string>("");
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const formTermsAndConditions = TermsAndConditionsFrom();
+  const formValidationData = ValidationDataFrom();
+  const formCodeConfirmation = CodeConfirmationFrom();
+  const formAdditionalInformation = AdditionalInformationFrom();
+
+  const handleNext = async () => {
+    if (activeStep === 0) {
+      const result = await TermsAndConditionsSubmittedFrom(
+        formTermsAndConditions
+      );
+      if (!result) return;
+      nextStep();
+    } else if (activeStep === 1) {
+      const result = await ValidationDataSubmittedFrom(formValidationData);
+      if (!result) return;
+      nextStep();
+    } else if (activeStep === 2) {
+      const result = await CodeConfirmationSubmittedFrom(formCodeConfirmation);
+      if (!result) return;
+      nextStep();
+    } else if (activeStep === 3) {
+      const result = await AdditionalInformationSubmittedFrom(
+        formAdditionalInformation
+      );
+      if (!result) return;
+      setQrCode("00000000");
+      nextStep();
+    }
   };
+
+  const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
-  const dataToSave = (data: FormRegisterWizardData) => {
-    if (activeStep === 0) {
-      setRegisterWizardData((prevState) => ({
-        ...prevState,
-        terms: data.terms,
-      }));
-    } else if (activeStep === 1) {
-      setRegisterWizardData((prevState) => ({
-        ...prevState,
-        validationData: data.validationData,
-      }));
-    } else if (activeStep === 2) {
-      setRegisterWizardData((prevState) => ({
-        ...prevState,
-        codeConfirmation: data.codeConfirmation,
-      }));
-    } else if (activeStep === 3) {
-      setRegisterWizardData((prevState) => ({
-        ...prevState,
-        additionalInformation: data.additionalInformation,
-      }));
-    }
-  };
-
-  useEffect(() => {
-    if (activeStep === 4) {
-      // get QR code
-      setRegisterWizardData((prevState) => ({
-        ...prevState,
-        qrCode: "00000000",
-      }));
-    }
-  }, [activeStep]);
-
-  useEffect(() => {
-    console.log({ registerWizardData });
-  }, [registerWizardData]);
 
   return (
     <Fragment>
@@ -86,30 +84,16 @@ export default function HorizontalLinearStepper() {
       </Stepper>
       <div class="p-2">
         {activeStep === 0 && (
-          <FormTermsAndConditions
-            onDataChanged={(data) => dataToSave({ terms: data })}
-          />
+          <FormTermsAndConditions props={formTermsAndConditions} />
         )}
-        {activeStep === 1 && (
-          <FormValidationData
-            onDataChanged={(data) => dataToSave({ validationData: data })}
-          />
-        )}
+        {activeStep === 1 && <FormValidationData props={formValidationData} />}
         {activeStep === 2 && (
-          <FormCodeConfirmation
-            onDataChanged={(data) => dataToSave({ codeConfirmation: data })}
-          />
+          <FormCodeConfirmation props={formCodeConfirmation} />
         )}
         {activeStep === 3 && (
-          <FormAdditionalInformation
-            onDataChanged={(data) =>
-              dataToSave({ additionalInformation: data })
-            }
-          />
+          <FormAdditionalInformation props={formAdditionalInformation} />
         )}
-        {activeStep === 4 && (
-          <FormQRPreInscription qrCodeValue={registerWizardData?.qrCode} />
-        )}
+        {activeStep === 4 && <FormQRPreInscription qrCodeValue={qrCode} />}
       </div>
       <div class="flex justify-between mt-4">
         <Button

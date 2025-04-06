@@ -8,19 +8,23 @@ export type ValidationData = {
   lastName?: string;
   email?: string;
   gender?: string;
-}
+};
+
+export type CodeConfirmation = {
+  codeConfirmation?: string;
+};
 
 export type AdditionalInformation = {
   documentId?: string;
   birthdate?: string;
   phoneNumber?: string;
   address?: string;
-}
+};
 
 export type FormRegisterWizardData = {
   terms?: TermsAndConditions;
   validationData?: ValidationData;
-  codeConfirmation?: string;
+  codeConfirmation?: CodeConfirmation;
   additionalInformation?: AdditionalInformation;
   qrCode?: string;
-}
+};

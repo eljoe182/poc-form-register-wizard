@@ -1,44 +1,24 @@
-import type { JSX } from "preact";
 import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
-import { useState } from "preact/hooks";
-import type { TermsAndConditions } from "../../interfaces";
+import { type TermsAndConditionsFromType } from "../../validations";
 
 interface Props {
-  onDataChanged: (data: TermsAndConditions) => void;
+  props: TermsAndConditionsFromType;
 }
 
-const INITIAL_STATE: TermsAndConditions = {
-  acceptTerms: true,
-  acceptCommunications: true,
-};
-
-export default function FormTermsAndConditions({ onDataChanged }: Props) {
-  const [terms, setTerms] = useState<TermsAndConditions>(INITIAL_STATE);
-
-  const handleOnChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
-    if (!event.currentTarget) return;
-
-    const targetName = event.currentTarget.name;
-    const targetValue = event.currentTarget.checked;
-
-    setTerms((prevState) => ({
-      ...prevState,
-      [targetName]: targetValue,
-    }));
-
-    onDataChanged(terms);
-  };
-
+export default function FormTermsAndConditions({ props }: Props) {
   return (
-    <form class="flex flex-col items-center justify-center">
+    <form
+      class="flex flex-col items-center justify-center"
+      onSubmit={props.handleSubmit}
+    >
       <FormGroup>
         <FormControlLabel
           control={
             <Checkbox
               name="acceptTerms"
-              value={terms.acceptTerms}
+              value={props.values.acceptTerms}
+              onChange={props.handleChange}
               defaultChecked
-              onChange={handleOnChange}
             />
           }
           label="I agree to the terms and conditions and the use of my data."
@@ -47,9 +27,9 @@ export default function FormTermsAndConditions({ onDataChanged }: Props) {
           control={
             <Checkbox
               name="acceptCommunications"
-              value={terms.acceptCommunications}
+              value={props.values.acceptCommunications}
+              onChange={props.handleChange}
               defaultChecked
-              onChange={handleOnChange}
             />
           }
           label="I agree to receive communications, promotions and advertising."
