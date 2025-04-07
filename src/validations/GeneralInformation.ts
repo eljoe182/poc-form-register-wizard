@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { GENERAL_INFORMATION_INITIAL_STATE } from "../constants";
+import { actions } from "astro:actions";
 
 export const GeneralInformationValidationSchema = yup.object({
   firstName: yup.string().min(3).required("First Name is required"),
@@ -17,8 +18,18 @@ export const GeneralInformationFrom = () =>
   useFormik({
     initialValues: GENERAL_INFORMATION_INITIAL_STATE,
     validationSchema: GeneralInformationValidationSchema,
-    onSubmit: (values) => {
-      console.log({ values });
+    onSubmit: async (values) => {
+      const { data, error } =
+        await actions.GeneralInformationAction.sendGeneralInformation({
+          firstName: values.firstName!,
+          lastName: values.lastName!,
+          email: values.email!,
+          gender: values.gender!,
+        });
+      if (error) {
+        console.log({ error });
+      }
+      return data;
     },
   });
 export type GeneralInformationFromType = ReturnType<

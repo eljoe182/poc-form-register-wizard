@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { CODE_CONFIRMATION_INITIAL_STATE } from "../constants";
+import { actions } from "astro:actions";
 
 export const CodeConfirmationValidationSchema = yup.object({
   codeConfirmation: yup
@@ -13,8 +14,14 @@ export const CodeConfirmationFrom = () =>
   useFormik({
     initialValues: CODE_CONFIRMATION_INITIAL_STATE,
     validationSchema: CodeConfirmationValidationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const { data, error } = await actions.CodeConfirmationAction.checkCode({
+        codeConfirmation: values.codeConfirmation!,
+      });
+      if (error) {
+        console.log({ error });
+      }
+      return data;
     },
   });
 export type CodeConfirmationFromType = ReturnType<typeof CodeConfirmationFrom>;

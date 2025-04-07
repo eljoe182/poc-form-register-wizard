@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev --remote",
-    "build": "astro build",
+    "build": "astro build --remote",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
@@ -27,6 +27,7 @@
     "react-qr-code": "^2.0.15",
     "tailwindcss": "^4.1.2",
     "typescript": "^5.8.3",
+    "uuid": "^11.1.0",
     "yup": "^1.6.1"
   },
   "overrides": {

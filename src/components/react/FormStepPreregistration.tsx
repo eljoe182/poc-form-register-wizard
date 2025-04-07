@@ -61,7 +61,7 @@ export default function HorizontalLinearStepper() {
         formAdditionalInformation
       );
       if (!result) return;
-      setQrCode("00000000");
+      setQrCode(result);
       nextStep();
     }
   };

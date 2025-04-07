@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { TERMS_AND_CONDITIONS_INITIAL_STATE } from "../constants";
+import { actions } from "astro:actions";
 
 export const TermsAndConditionsValidationSchema = yup.object({
   acceptTerms: yup.boolean().required("Accept Terms is required"),
@@ -13,8 +14,16 @@ export const TermsAndConditionsFrom = () =>
   useFormik({
     initialValues: TERMS_AND_CONDITIONS_INITIAL_STATE,
     validationSchema: TermsAndConditionsValidationSchema,
-    onSubmit: (values) => {
-      console.log({ values });
+    onSubmit: async (values) => {
+      const { data, error } =
+        await actions.TermsAndConditionsAction.sendTermsAndConditions({
+          acceptTerms: values.acceptTerms!,
+          acceptCommunications: values.acceptCommunications!,
+        });
+      if (error) {
+        console.log({ error });
+      }
+      return data;
     },
   });
 export type TermsAndConditionsFromType = ReturnType<
