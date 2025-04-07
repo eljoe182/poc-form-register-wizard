@@ -26,6 +26,8 @@ export const AdditionalInformationFrom = () =>
         console.log({ error });
       }
 
+      await actions.SMTPAction.sendQRPreInscription();
+
       return data;
     },
   });

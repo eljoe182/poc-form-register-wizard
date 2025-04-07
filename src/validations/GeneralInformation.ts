@@ -29,7 +29,10 @@ export const GeneralInformationFrom = () =>
       if (error) {
         console.log({ error });
       }
-      return data;
+
+      await actions.SMTPAction.sendCodeConfirmation();
+
+      return data?.id;
     },
   });
 export type GeneralInformationFromType = ReturnType<

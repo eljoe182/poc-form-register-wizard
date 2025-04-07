@@ -30,14 +30,19 @@ export const GeneralInformationAction = {
         .where(eq(PreInscription.id, sessionId?.value!))
         .returning({ id: PreInscription.id });
 
+      const codeConfirmation = generateCode(6);
+
       await db.insert(Confirmation).values({
         pre_inscription_id: result[0].id,
-        code_confirmation: generateCode(6),
+        code_confirmation: codeConfirmation,
         created_at: dayjs().toDate(),
         time_of_validity: dayjs().add(1, "minute").toDate(),
       });
 
-      return result[0].id;
+      return {
+        id: result[0].id,
+        codeConfirmation,
+      };
     },
   }),
 };
