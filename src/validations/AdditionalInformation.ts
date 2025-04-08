@@ -22,13 +22,15 @@ export const AdditionalInformationFrom = () =>
           phoneNumber: values.phoneNumber!,
           address: values.address!,
         });
-      if (error) {
-        console.log({ error });
+
+      if (!error) {
+        await actions.SMTPAction.sendQRPreInscription();
       }
 
-      await actions.SMTPAction.sendQRPreInscription();
-
-      return data;
+      return {
+        error,
+        data,
+      };
     },
   });
 export type AdditionalInformationFromType = ReturnType<

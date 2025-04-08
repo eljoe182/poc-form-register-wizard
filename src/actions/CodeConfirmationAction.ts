@@ -24,7 +24,7 @@ export const CodeConfirmationAction = {
         );
 
       if (result.length === 0) {
-        throw new Error("Code Confirmation is invalid");
+        throw new Error("Code confirmation is invalid");
       }
 
       await db

@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { GENERAL_INFORMATION_INITIAL_STATE } from "../constants";
 import { actions } from "astro:actions";
+import { ACTION_ERRORS } from "@/constants/errors";
 
 export const GeneralInformationValidationSchema = yup.object({
   firstName: yup.string().min(3).required("First Name is required"),
@@ -28,13 +29,15 @@ export const GeneralInformationFrom = () =>
           email: values.email!,
           gender: values.gender!,
         });
-      if (error) {
-        console.log({ error });
+
+      if (!error) {
+        await actions.SMTPAction.sendCodeConfirmation();
       }
 
-      await actions.SMTPAction.sendCodeConfirmation();
-
-      return data?.id;
+      return {
+        error,
+        data,
+      };
     },
   });
 export type GeneralInformationFromType = ReturnType<
@@ -47,6 +50,14 @@ export const GeneralInformationSubmittedFrom = async (
   const validationResult = await form.validateForm();
   form.setErrors(validationResult);
   if (Object.keys(validationResult).length > 0) return false;
-  await form.submitForm();
+  const { error } = await form.submitForm();
+
+  if (error) {
+    if (error.message === ACTION_ERRORS.EMAIL_REGISTERED.actionMessage) {
+      form.setFieldError("email", ACTION_ERRORS.EMAIL_REGISTERED.message);
+    }
+    return false;
+  }
+
   return true;
 };

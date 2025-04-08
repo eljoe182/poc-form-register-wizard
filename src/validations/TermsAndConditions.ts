@@ -20,10 +20,10 @@ export const TermsAndConditionsFrom = () =>
           acceptTerms: values.acceptTerms!,
           acceptCommunications: values.acceptCommunications!,
         });
-      if (error) {
-        console.log({ error });
-      }
-      return data;
+      return {
+        error,
+        data,
+      };
     },
   });
 export type TermsAndConditionsFromType = ReturnType<
@@ -36,6 +36,12 @@ export const TermsAndConditionsSubmittedFrom = async (
   const validationResult = await form.validateForm();
   form.setErrors(validationResult);
   if (Object.keys(validationResult).length > 0) return false;
-  await form.submitForm();
+  const { error } = await form.submitForm();
+
+  if (error) {
+    console.log({ error });
+    return false;
+  }
+
   return true;
 };
