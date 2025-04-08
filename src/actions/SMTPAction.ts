@@ -1,6 +1,8 @@
 import { defineAction } from "astro:actions";
-import { db, eq, PreInscription, Confirmation } from "astro:db";
 import { Resend } from "resend";
+import { db, eq, PreInscription, Confirmation } from "astro:db";
+import { generateCode } from "../lib";
+import dayjs from "dayjs";
 
 export const SMTPAction = {
   sendCodeConfirmation: defineAction({
@@ -11,34 +13,38 @@ export const SMTPAction = {
 
       const sessionId = context.cookies.get("x-session-id");
 
-      const resultConfirmation = await db
+      const codeConfirmation = generateCode(6);
+
+      await db.insert(Confirmation).values({
+        pre_inscription_id: sessionId?.value!,
+        code_confirmation: codeConfirmation,
+        created_at: dayjs().toDate(),
+        time_of_validity: dayjs().add(1, "minute").toDate(),
+      });
+
+      const resultPreInscription = await db
         .select({
-          codeConfirmation: Confirmation.code_confirmation,
           email: PreInscription.email,
           firstName: PreInscription.first_name,
           lastName: PreInscription.last_name,
         })
-        .from(Confirmation)
-        .leftJoin(
-          PreInscription,
-          eq(Confirmation.pre_inscription_id, PreInscription.id)
-        )
-        .where(eq(Confirmation.pre_inscription_id, sessionId?.value!))
+        .from(PreInscription)
+        .where(eq(PreInscription.id, sessionId?.value!))
         .get();
 
       const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
       const { data, error } = await resend.emails.send({
         from: "POC wizard <no-reply@eljoe182.com>",
-        to: [resultConfirmation?.email!],
+        to: [resultPreInscription?.email!],
         subject: "Code confirmation for RNR-FIT",
         text: `
-        Hi ${resultConfirmation?.firstName} ${resultConfirmation?.lastName}
-        Your code is ${resultConfirmation?.codeConfirmation}
+        Hi ${resultPreInscription?.firstName} ${resultPreInscription?.lastName}
+        Your code is ${codeConfirmation}
         `,
         html: `
-        <h1>Hi ${resultConfirmation?.firstName} ${resultConfirmation?.lastName}</h1>
-        <p>Your code is ${resultConfirmation?.codeConfirmation}</p>
+        <h1>Hi ${resultPreInscription?.firstName} ${resultPreInscription?.lastName}</h1>
+        <p>Your code is ${codeConfirmation}</p>
         `,
       });
 

@@ -43,6 +43,12 @@ export const AdditionalInformationSubmittedFrom = async (
   const validationResult = await form.validateForm();
   form.setErrors(validationResult);
   if (Object.keys(validationResult).length > 0) return false;
-  const result = await form.submitForm();
-  return result;
+  const { data, error } = await form.submitForm();
+
+  if (error) {
+    console.log({ error });
+    return false;
+  }
+
+  return data;
 };

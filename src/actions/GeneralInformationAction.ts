@@ -1,8 +1,6 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
-import { Confirmation, db, eq, PreInscription } from "astro:db";
-import { generateCode } from "../lib";
-import dayjs from "dayjs";
+import { db, eq, PreInscription } from "astro:db";
 
 export const GeneralInformationAction = {
   sendGeneralInformation: defineAction({
@@ -30,18 +28,8 @@ export const GeneralInformationAction = {
         .where(eq(PreInscription.id, sessionId?.value!))
         .returning({ id: PreInscription.id });
 
-      const codeConfirmation = generateCode(6);
-
-      await db.insert(Confirmation).values({
-        pre_inscription_id: result[0].id,
-        code_confirmation: codeConfirmation,
-        created_at: dayjs().toDate(),
-        time_of_validity: dayjs().add(1, "minute").toDate(),
-      });
-
       return {
         id: result[0].id,
-        codeConfirmation,
       };
     },
   }),

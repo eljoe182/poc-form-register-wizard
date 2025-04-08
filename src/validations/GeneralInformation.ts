@@ -29,11 +29,6 @@ export const GeneralInformationFrom = () =>
           email: values.email!,
           gender: values.gender!,
         });
-
-      if (!error) {
-        await actions.SMTPAction.sendCodeConfirmation();
-      }
-
       return {
         error,
         data,
@@ -58,6 +53,8 @@ export const GeneralInformationSubmittedFrom = async (
     }
     return false;
   }
+
+  await actions.SMTPAction.sendCodeConfirmation();
 
   return true;
 };
