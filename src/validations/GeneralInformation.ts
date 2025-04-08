@@ -18,6 +18,8 @@ export const GeneralInformationFrom = () =>
   useFormik({
     initialValues: GENERAL_INFORMATION_INITIAL_STATE,
     validationSchema: GeneralInformationValidationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async (values) => {
       const { data, error } =
         await actions.GeneralInformationAction.sendGeneralInformation({
