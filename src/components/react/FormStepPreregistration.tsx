@@ -1,8 +1,5 @@
 import { Fragment } from "preact";
 import { useState } from "preact/hooks";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import {
   FormTermsAndConditions,
@@ -22,13 +19,29 @@ import {
   AdditionalInformationSubmittedFrom,
 } from "../../validations";
 import { CircularProgress } from "@mui/material";
+import { Stepper } from "./components";
 
 const steps = [
-  "Terms and Conditions",
-  "General Information",
-  "Code Confirmation",
-  "Additional Information",
-  "QR Pre-inscription",
+  {
+    title: "Terms and Conditions",
+    description: "",
+  },
+  {
+    title: "General Information",
+    description: "",
+  },
+  {
+    title: "Code Confirmation",
+    description: "",
+  },
+  {
+    title: "Additional Information",
+    description: "",
+  },
+  {
+    title: "QR Pre-inscription",
+    description: "",
+  },
 ];
 
 export default function HorizontalLinearStepper() {
@@ -81,18 +94,7 @@ export default function HorizontalLinearStepper() {
 
   return (
     <Fragment>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          return (
-            <Step
-              key={label}
-              completed={activeStep > index || activeStep === steps.length - 1}
-            >
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
+      <Stepper steps={steps} activeStep={activeStep} />
       <div class="p-2">
         {loading ? (
           <div class="flex justify-center items-center">
