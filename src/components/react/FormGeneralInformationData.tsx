@@ -18,7 +18,7 @@ export default function FormGeneralInformationData({ props }: Props) {
       class="flex flex-col items-center justify-center p-12 gap-8"
       onSubmit={props.handleSubmit}
     >
-      <div class="grid grid-cols-2 gap-4 w-full">
+      <div class="grid md:grid-cols-2 gap-4 w-full">
         <TextField
           fullWidth
           label="First Name"
